@@ -10,12 +10,9 @@ type client struct {
 }
 
 // New returns a new instance of client which implements Client interface
-func New() Client {
+func New() client {
 	return client{client: http.DefaultClient}
 }
-
-// Check to ensure type client implements Client interface
-var _ Client = (*client)(nil)
 
 // Get sends a GET request
 func (c client) Get(url string) (*http.Response, error) {
