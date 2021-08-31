@@ -5,17 +5,17 @@ import (
 )
 
 // client is a wrapper around http.Client
-type client struct {
+type Client struct {
 	client *http.Client
 }
 
 // New returns a new instance of client which implements Client interface
-func New() client {
-	return client{client: http.DefaultClient}
+func New() Client {
+	return Client{client: http.DefaultClient}
 }
 
 // Get sends a GET request
-func (c client) Get(url string) (*http.Response, error) {
+func (c Client) Get(url string) (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
