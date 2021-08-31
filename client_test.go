@@ -11,7 +11,6 @@ func Test_Get(t *testing.T) {
 		id       int
 		input    string
 		response *http.Response
-		err      error
 	}
 
 	testCases := []testCase{
@@ -21,7 +20,6 @@ func Test_Get(t *testing.T) {
 			response: &http.Response{
 				StatusCode: http.StatusOK,
 			},
-			err: nil,
 		},
 	}
 

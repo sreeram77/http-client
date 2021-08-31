@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - "*"
 
 jobs:
   build:
@@ -19,3 +19,13 @@ jobs:
       - name: Test code
         run: |
           go test
+  code_quality:
+    name: Code Quality
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout cod
+        uses: actions/checkout@v2
+      - name: Run lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
