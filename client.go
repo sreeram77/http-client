@@ -15,10 +15,14 @@ func New() Client {
 }
 
 // Get sends a GET request
-func (c Client) Get(url string) (*http.Response, error) {
+func (c Client) Get(url string, headers map[string]string) (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	for key := range headers {
+		req.Header.Add(key, headers[key])
 	}
 
 	return c.client.Do(req)
