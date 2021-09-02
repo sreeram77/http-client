@@ -25,7 +25,7 @@ func Test_Get(t *testing.T) {
 
 	for _, tc := range testCases {
 		c := New()
-		resp, err := c.Get(tc.input, nil)
+		resp, err := c.Get(tc.input, nil, nil)
 		if err != nil {
 			t.Error(err)
 		}
