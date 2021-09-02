@@ -20,7 +20,7 @@ func main() {
   // Create an instance of client
 	c := http.New()
   // Make a GET request to URL
-	r, err := c.Get("https://google.com")
+	r, err := c.Get("https://google.com", nil)
 	if err != nil {
 		fmt.Println(err)
 	}
