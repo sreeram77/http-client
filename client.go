@@ -1,9 +1,10 @@
 package http
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
-	"net/url"
+	netURL "net/url"
 )
 
 // client is a wrapper around http.Client
@@ -17,8 +18,19 @@ func New() Client {
 }
 
 // Get sends a GET request
-func (c Client) Get(u string, headers map[string]string, params map[string]interface{}) (*http.Response, error) {
-	req, err := http.NewRequest(http.MethodGet, u, nil)
+func (c Client) Get(url string, headers map[string]string, params map[string]interface{}) (*http.Response, error) {
+
+	req, err := GenerateRequest(url, http.MethodGet, headers, params, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.client.Do(req)
+}
+
+// GenerateRequest creates an HTTP request based on params
+func GenerateRequest(url, method string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Request, error) {
+	req, err := http.NewRequest(http.MethodGet, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +39,7 @@ func (c Client) Get(u string, headers map[string]string, params map[string]inter
 		req.Header.Add(key, headers[key])
 	}
 
-	q := url.Values{}
+	q := netURL.Values{}
 
 	for key, value := range params {
 		switch t := value.(type) {
@@ -45,5 +57,5 @@ func (c Client) Get(u string, headers map[string]string, params map[string]inter
 
 	req.URL.RawQuery = q.Encode()
 
-	return c.client.Do(req)
+	return req, nil
 }
