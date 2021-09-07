@@ -58,7 +58,7 @@ func Test_GenerateRequest(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		req, err := GenerateRequest(tc.url, tc.method, tc.header, tc.param, tc.body)
+		req, err := generateRequest(tc.url, tc.method, tc.header, tc.param, tc.body)
 		if err != nil {
 			t.Error(err)
 		}
