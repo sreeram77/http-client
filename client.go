@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	netURL "net/url"
+	"time"
 )
 
 // client is a wrapper around http.Client
@@ -15,6 +16,15 @@ type Client struct {
 // New returns a new instance of client which implements Client interface
 func New() Client {
 	return Client{client: http.DefaultClient}
+}
+
+// NewClientWithTimeout returns an instance of Client with a Timeout
+// Timeout for DefaultClient is 0, which means the connection never times out
+func NewClientWithTimeout(t time.Duration) Client {
+	c := http.DefaultClient
+	c.Timeout = t
+
+	return Client{client: c}
 }
 
 // Get sends a GET request
