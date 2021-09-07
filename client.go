@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	netURL "net/url"
+	"time"
 )
 
 // client is a wrapper around http.Client
@@ -17,10 +18,18 @@ func New() Client {
 	return Client{client: http.DefaultClient}
 }
 
+// NewClientWithTimeout returns an instance of Client with a Timeout
+// Timeout for DefaultClient is 0, which means the connection never times out
+func NewClientWithTimeout(t time.Duration) Client {
+	c := http.DefaultClient
+	c.Timeout = t
+
+	return Client{client: c}
+}
+
 // Get sends a GET request
 func (c Client) Get(url string, headers map[string]string, params map[string]interface{}) (*http.Response, error) {
-
-	req, err := GenerateRequest(url, http.MethodGet, headers, params, nil)
+	req, err := generateRequest(url, http.MethodPost, headers, params, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +37,17 @@ func (c Client) Get(url string, headers map[string]string, params map[string]int
 	return c.client.Do(req)
 }
 
-// GenerateRequest creates an HTTP request based on params
-func GenerateRequest(url, method string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Request, error) {
+// Post sends a POST request
+func (c Client) Post(url string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Response, error) {
+	req, err := generateRequest(url, http.MethodGet, headers, params, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.client.Do(req)
+}
+
+func generateRequest(url, method string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Request, error) {
 	req, err := http.NewRequest(http.MethodGet, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
