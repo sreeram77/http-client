@@ -29,7 +29,7 @@ func NewClientWithTimeout(t time.Duration) Client {
 
 // Get sends a GET request
 func (c Client) Get(url string, headers map[string]string, params map[string]interface{}) (*http.Response, error) {
-	req, err := generateRequest(url, http.MethodPost, headers, params, nil)
+	req, err := GenerateRequest(url, http.MethodGet, headers, params, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (c Client) Get(url string, headers map[string]string, params map[string]int
 
 // Post sends a POST request
 func (c Client) Post(url string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Response, error) {
-	req, err := generateRequest(url, http.MethodGet, headers, params, body)
+	req, err := GenerateRequest(url, http.MethodPost, headers, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,38 @@ func (c Client) Post(url string, headers map[string]string, params map[string]in
 	return c.client.Do(req)
 }
 
-func generateRequest(url, method string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Request, error) {
+// Delete sends a DELETE request
+func (c Client) Delete(url string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Response, error) {
+	req, err := GenerateRequest(url, http.MethodDelete, headers, params, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.client.Do(req)
+}
+
+// Put sends a PUT request
+func (c Client) Put(url string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Response, error) {
+	req, err := GenerateRequest(url, http.MethodPut, headers, params, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.client.Do(req)
+}
+
+// Patch sends a PATCH request
+func (c Client) Patch(url string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Response, error) {
+	req, err := GenerateRequest(url, http.MethodGet, headers, params, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.client.Do(req)
+}
+
+// GenerateRequest creates HTTP Request from input params
+func GenerateRequest(url, method string, headers map[string]string, params map[string]interface{}, body []byte) (*http.Request, error) {
 	req, err := http.NewRequest(http.MethodGet, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
